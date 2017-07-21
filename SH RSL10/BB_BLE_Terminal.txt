@@ -1,0 +1,101 @@
+Original pair_bond project modified for the mobile device connection to the IoT_EDK Base Board 
+================================================================
+by RSL10 shield
+
+It allowe to do byte message transfer with lenght shorter than 60 bytes in one order. 
+For longer message transfer there should be frame message format defined. 
+
+       Pairing and Bonding with Peripheral Device Sample Code
+       ======================================================
+
+This sample project generates a battery service and a custom service. It
+then starts an undirected connectable advertising with the device's public
+address if an address is avaliable at DEVICE_INFO_BLUETOOTH_ADDR in 
+non-volatile memory three (NVR3). If this address is not defined 
+(all 1s or 0s) use a pre-defined, non-resolvable private Bluetooth(R) 
+address located in app.h. For this sample project, any central (master) 
+device can scan, connect, perform service discovery, receive battery 
+value notifications, or read the battery value.
+
+It has an ability to pair and bond to the master device. When master device 
+sends the pairing request, it responds with a set of pre-defined configurations. 
+Code in the GAPC_BondReqInd() function can be modified to achieve desired 
+security level and to specify keys will be exchanged. It can also generate the 
+IRK and LTK to be sent to master. When these values are generated, the app saves
+the values into the non-volatile record (NVR2) in flash. 
+
+No additional features using flash are implemented in this project. 
+When this application starts, it creates a whitelist using the bonding 
+information stored to non-volatile record 2 (NVR2) in flash. 
+This information should not be erased unless a user wishes to restart 
+with an empty list of known devices. If starting from a new whitelist 
+at startup is the desired behavior for your application or test configuration,
+the line "result = Flash_EraseSector(FLASH_NVR2_BASE);" can be uncommented
+and executed.
+
+A whitelist structure (list[SIZEOF_WHITELIST]) is used to hold all the bonded 
+information in the app_task.c while the program is running. When the app 
+starts up, it loads the bonded data into the list array. When the entire list
+is empty, all the entries are written high. 
+
+The whitelist structure has an index element which indicates the availability of
+a place in the list[SIZEOF_WHITELIST]. If it is 0xFF, it is avaliable. 
+If it is any other value other than 0x00 and 0xFF, it means that the place 
+is currently holding on to bonding information associated with a master device. 
+0x00 means that the place is unusable because it has been previously used and 
+deleted. Unless you erase entire NVR2, you cannot write high to any registers,
+thus unusable to rewrite. Writing to already used place in NVR2 may cause an 
+error.
+
+Function that erases entire flash is there, but it is never called. It was 
+tested but was not used in the sample code. If the bonding list is full, it
+searches for invalid index and tries to overwrite in that index by erasing 
+entire bonding data and rewriting the valid ones. 
+
+Erase entire flash could be called (Empty_Whitelist) if entire list is full 
+and all of them are valid. If that is done, remember to set all the values in
+struct whitelist[] as FF. 
+This can be easily done by line 
+memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_WHITELIST-1)
+    		* sizeof(struct whitelist)); 
+after the flash has been erased.
+
+The central device has the ability to read and write custom attributes. The
+RSL10 LSAD is used to read the battery level value. Reading the battery 
+level happens every 200 ms when there is a timer interrupt. The average for 
+16 reads is calculated. If the average value changes, a flag is set to send 
+the battery level notification.
+
+To show how application can send notification, every 30 timer interrupts, 
+a notification request flag is set and then application sends the value of 
+the first attribute to peer device.
+
+This sample project has six states before all services are enabled. These
+are as follows: initialization (APPM_INIT), create database (APPM_CREATE_DB),
+ready (APPM_READY), advertising (APPM_ADVERTISING), connected 
+(APPM_CONNECTED) and enabled (APPM_ENABLED).
+
+APPM_INIT - Initializes the sample application and configures it into an idle
+state 
+APPM_CREATE_DB - Application has started adding databases to the BLE stack
+and configured GAP.
+APPM_READY - Application has added the desired custom services and profiles 
+into the Bluetooth stack. 
+APPM_ADVERTISING - The device has started advertising based on the sample 
+project. 
+APPM_CONNECTED - Once the connection is established with another compatible 
+device, the state changes to connected.
+APPM_ENABLED - Application has discovered desired services successfully from
+another compatible device; ready for use.
+
+The source code exists in a "code" folder, and application-related include
+header files are in the "include" folder. The "thirdparty" folder holds
+some required files for the profile applications and are not to be changed.
+
+Select the project configuration according to the chip ID version of  
+RSL10. The appropriate libraries and include files are loaded according to 
+the build configuration that you choose. Use "Debug" for CID 8102.
+
+===============================================================================
+Copyright (c) 2015-2016 Semiconductor Components Industries, LLC
+(d/b/a ON Semiconductor).
