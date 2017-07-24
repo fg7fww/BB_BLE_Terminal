@@ -59,7 +59,7 @@ enum appm_svc_list
 
 /* Maximal length of the Device Name value  */
 #define APP_DEVICE_NAME_LENGTH_MAX      20
-#define APP_DFLT_DEVICE_NAME            "BB_BLE_Terminal"
+#define APP_DFLT_DEVICE_NAME            "BB_BLE_New_Libs"
 
 /* vendor specific advertising type (ON SEMICONDUCTOR Company ID) */
 #define APP_SCNRSP_DATA                 {0x4, 0xff, 0x62, 0x3, 0x3}

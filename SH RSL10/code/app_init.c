@@ -54,12 +54,10 @@ void App_Initialize(void)
     SYSCTRL_RF_ACCESS_CFG->RF_ACCESS_ALIAS = RF_ACCESS_ENABLE_BITBAND;
 
     /* Start the 48 MHz oscillator without changing the other register bits */
-    RF_XTAL_CTRL->XTAL_CTRL_XO_EN_B_REG_ALIAS =
-            XTAL_CTRL_ENABLE_OSCILLATOR_BITBAND;
-    RF_XTAL_CTRL->XTAL_CTRL_REG_VALUE_SEL_ALIAS =
-            XTAL_CTRL_REG_VALUE_SEL_INTERNAL_BITBAND;
+    RF->XTAL_CTRL = ((RF->XTAL_CTRL & ~XTAL_CTRL_DISABLE_OSCILLATOR) |
+                     XTAL_CTRL_REG_VALUE_SEL_INTERNAL);
 
-    /* Enable 48 MHz oscillator divider at desired prescale value */
+    /* Enable the 48 MHz oscillator divider using the desired prescale value */
     RF_REG2F->CK_DIV_1_6_CK_DIV_1_6_BYTE = CK_DIV_1_6_PRESCALE_6_BYTE;
 
     /* Wait until 48 MHz oscillator is started */
@@ -82,11 +80,10 @@ void App_Initialize(void)
     srand(1);
 
     /* Configure LSAD channel 0 to measure VBAT/2 */
-    Sys_LSAD_Set_Config(LSAD_VBAT_DIV2_NORMAL | LSAD_NORMAL |
-                        LSAD_PRESCALE_6400);
-    Sys_LSAD_InputSelectConfig(0,
-                               (LSAD_NEG_INPUT_GND |
-                                LSAD_POS_INPUT_VBAT_DIV2));
+    Sys_ADC_Set_Config(ADC_VBAT_DIV2_NORMAL | ADC_NORMAL | ADC_PRESCALE_6400);
+    Sys_ADC_InputSelectConfig(0,
+                               (ADC_NEG_INPUT_GND |
+                                ADC_POS_INPUT_VBAT_DIV2));
 
     /* Configure and start timer 0 with a period of 200 ms */
     Sys_Timer_Set_Control(0, TIMER_FREE_RUN | TIMER_PRESCALE_8 |

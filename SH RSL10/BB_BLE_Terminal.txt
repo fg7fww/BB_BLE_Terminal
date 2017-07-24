@@ -1,4 +1,4 @@
-Original pair_bond project modified for the mobile device connection to the IoT_EDK Base Board 
+Original pair_bond project modified for the mobile device connection to the IoT_EDK Base Board Terminal project
 ================================================================
 by RSL10 shield
 

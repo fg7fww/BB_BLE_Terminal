@@ -147,7 +147,7 @@ void TIMER0_IRQHandler(void)
 
     /* Calculate the battery level as a percentage, scaling the battery
      * voltage between 1.4V (max) and 1.1V (min) */
-    level = ((LSAD->DATA_TRIM_CH[0] - VBAT_1p1V_MEASURED) * 100
+    level = ((ADC->DATA_TRIM_CH[0] - VBAT_1p1V_MEASURED) * 100
              / (VBAT_1p4V_MEASURED - VBAT_1p1V_MEASURED));
     level = ((level >= 100) ? 100 : level);
 
@@ -172,16 +172,9 @@ void TIMER0_IRQHandler(void)
     }
 }
 
-void SPI0_TX_IRQHandler(void)
-{
+void SPI0_TX_IRQHandler(void){}
 
-
-}
-
-void SPI0_ERROR_IRQHandler (void)
-{
-
-}
+void SPI0_ERROR_IRQHandler (void){}
 
 void SPI1_RX_IRQHandler(void)
 {
@@ -233,12 +226,6 @@ void SPI1_RX_IRQHandler(void)
 	}
 }
 
-void SPI1_ERROR_IRQHandler(void)
-{
+void SPI1_ERROR_IRQHandler(void){}
 
-}
-
-void TIMER1_IRQHandler (void)
-{
-
-}
+void TIMER1_IRQHandler (void){}
