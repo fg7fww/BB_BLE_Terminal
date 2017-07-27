@@ -114,6 +114,8 @@ void App_Initialize(void)
     NVIC_EnableIRQ(SPI0_ERROR_IRQn);
     NVIC_EnableIRQ(SPI1_RX_IRQn);
     NVIC_EnableIRQ(SPI1_ERROR_IRQn);
+    NVIC_EnableIRQ(DIO0_IRQn);
+    NVIC_EnableIRQ(DIO1_IRQn);
 
     /* Enable the needed Bluetooth interrupts, and timer 0 interrupt */
     NVIC_EnableIRQ(BLE_EVENT_IRQn);

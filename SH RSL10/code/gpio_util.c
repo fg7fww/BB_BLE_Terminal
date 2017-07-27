@@ -109,7 +109,12 @@ void SPI1_SlaveCfg(void)
 
 	Sys_SPI_DIOConfig(1, SPI1_SELECT_SLAVE,
 			        DIO_LPF_DISABLE | DIO_WEAK_PULL_UP, 12, 9, 10, 11);
-
+	// Meaning of pad 11 (mode input/sero) driven by SPI1 Slave (cs)
+	Sys_DIO_IntConfig(0, DIO_SRC_DIO_9 | DIO_EVENT_FALLING_EDGE | DIO_DEBOUNCE_DISABLE, DIO_DEBOUNCE_SLOWCLK_DIV32, 9);
+	Sys_DIO_IntConfig(1, DIO_SRC_DIO_9 | DIO_EVENT_RISING_EDGE | DIO_DEBOUNCE_DISABLE, DIO_DEBOUNCE_SLOWCLK_DIV32, 9);
+	// force MISO pin to input mode before first transaction
+	Sys_DIO_Config(11, (DIO_MODE_INPUT | DIO_WEAK_PULL_UP | DIO_LPF_DISABLE));
+	// enable interrupt on Slave SPI1
     Sys_SPI_Config(1, SPI1_SELECT_SLAVE | SPI1_ENABLE |
         SPI1_CLK_POLARITY_NORMAL |SPI1_UNDERRUN_INT_ENABLE| SPI1_CONTROLLER_CM3 |
         SPI1_MODE_SELECT_AUTO | SPI1_PRESCALE_16);

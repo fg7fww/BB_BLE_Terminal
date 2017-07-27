@@ -235,6 +235,8 @@ extern void SPI1_RX_IRQHandler(void);
 extern void SPI0_ERROR_IRQHandler (void);
 extern void SPI1_ERROR_IRQHandler(void);
 extern void TIMER1_IRQHandler (void);
+extern void DIO0_IRQHandler(void);
+extern void DIO1_IRQHandler(void);
 
 /* Bluetooth baseband application support functions */
 extern void App_Init(void);

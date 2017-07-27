@@ -124,6 +124,15 @@ int main()
     }
 }
 
+//EVENT CS SPI1 FALLING EDGE
+void DIO0_IRQHandler(void){
+	Sys_DIO_Config(11, (DIO_MODE_SPI1_SERO));
+}
+//EVENT CS SPI1 RISING EDGE
+void DIO1_IRQHandler(void){
+	Sys_DIO_Config(11, (DIO_MODE_INPUT | DIO_WEAK_PULL_UP | DIO_LPF_DISABLE));
+}
+
 /* ----------------------------------------------------------------------------
  * Function      : void TIMER0_IRQHandler(void)
  * ----------------------------------------------------------------------------
