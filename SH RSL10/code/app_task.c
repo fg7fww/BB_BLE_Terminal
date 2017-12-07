@@ -382,14 +382,14 @@ int GAPC_ConnectionReqInd(ke_msg_id_t const msg_id,
                sizeof(param->peer_addr.addr));
 
         /* Check if the master device is already bonded */
-        currentMaster.INDEX = (checkBonded(&currentMaster.ADDR[0]));
+        currentMaster.STATE = (checkBonded(&currentMaster.ADDR[0]));
 
         /* If there is a no previous bonded information with the master
          * master device, set the index to 0xFF. The correct value will be
          * determined in bondInd() function */
-        if(currentMaster.INDEX == APP_NOT_BONDED)
+        if(currentMaster.STATE == APP_NOT_BONDED)
         {
-            currentMaster.INDEX = 0xFF;
+            currentMaster.STATE = 0xFF;
         }
 
         /* If the master device is already bonded, load the data from the
@@ -397,7 +397,7 @@ int GAPC_ConnectionReqInd(ke_msg_id_t const msg_id,
         else
         {
             flashAddr = (FLASH_NVR2_BASE +
-                         sizeof(BondInfo_Type) *(currentMaster.INDEX - 1));
+                         sizeof(BondInfo_Type) *(currentMaster.STATE - 1));
             memcpy(&currentMaster,(uint8_t *)flashAddr,
                    sizeof(BondInfo_Type));
             app_env.bonded = true;
@@ -955,7 +955,7 @@ int GAPC_BondReqInd(ke_msg_id_t const msg_id,
     {
         /* Using the used bits to mark invalidated connection.
          * Logical OR operation sets a bit */
-        currentMaster.INDEX = currentMaster.INDEX | 0x80;
+        currentMaster.STATE = currentMaster.STATE | 0x80;
 
         cfm->accept = false;
         app_env.bonded = false;
@@ -1014,7 +1014,7 @@ int GAPC_BondInd(ke_msg_id_t const msg_id, struct gapc_bond_ind const *param,
             {
 
             /* Ideally, this statement is never true */
-            if(currentMaster.INDEX & 0x80 == 0)
+            if(currentMaster.STATE & 0x80 == 0)
             {
                 /* Do Nothing */
             }
@@ -1023,15 +1023,15 @@ int GAPC_BondInd(ke_msg_id_t const msg_id, struct gapc_bond_ind const *param,
              * is called */
             else
             {
-                currentMaster.INDEX = searchAvailableIndex(currentMaster.INDEX);
+                currentMaster.STATE = searchAvailableIndex(currentMaster.STATE);
 
-                if(currentMaster.INDEX != INDEX_SEARCH_FAIL)
+                if(currentMaster.STATE != INDEX_SEARCH_FAIL)
                 {
                     /* Update the bonding status in the environment */
                     app_env.bonded = true;
 
                     /* Save the current master device's bonding information */
-                    result = WordWrite(currentMaster,currentMaster.INDEX);
+                    result = WordWrite(currentMaster,currentMaster.STATE);
                     /* Enable battery service */
                     Batt_ServiceEnable(app_env.conidx);
                 }

@@ -629,14 +629,14 @@ unsigned int WordWrite(BondInfo_Type list, unsigned int index)
 unsigned int checkBonded(uint8_t *addr)
 {
     unsigned int result;
-    BondInfo_Type list[SIZEOF_WHITELIST];
+    BondInfo_Type list[SIZEOF_BONDLIST];
 
-    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_WHITELIST-1)
+    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_BONDLIST-1)
             * sizeof(BondInfo_Type));
     int checker = 0;
-    for(int i = 1; i < SIZEOF_WHITELIST; i++)
+    for(int i = 1; i < SIZEOF_BONDLIST; i++)
     {
-        if(list[i].INDEX != 0 || ((list[i].INDEX & 0x80) == 0x80))
+        if(list[i].STATE != 0 || ((list[i].STATE & 0x80) == 0x80))
         {
             /* length of addr is 6 byte */
             for(int j = 0; j < BDADDR_LENGTH; j++)
@@ -673,16 +673,16 @@ unsigned int checkBonded(uint8_t *addr)
 unsigned int checkSpaceAvailable(void)
 {
     unsigned int result;
-    BondInfo_Type list[SIZEOF_WHITELIST];
+    BondInfo_Type list[SIZEOF_BONDLIST];
 
-    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_WHITELIST-1)
+    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_BONDLIST-1)
            * sizeof(BondInfo_Type));
 
-    for(int i = 1; i < SIZEOF_WHITELIST; i++)
+    for(int i = 1; i < SIZEOF_BONDLIST; i++)
     {
         /* Length of addr is 6 byte*/
         /* If there is an empty space, return */
-        if(list[i].INDEX == 0xFF || list[i].INDEX == 0x00)
+        if(list[i].STATE == 0xFF || list[i].STATE == 0x00)
         {
             return LIST_NOT_FULL;
         }
@@ -710,21 +710,21 @@ unsigned int searchAvailableIndex(uint8_t index)
     int invalidate = 0;
 
     unsigned int result;
-    BondInfo_Type list[SIZEOF_WHITELIST];
+    BondInfo_Type list[SIZEOF_BONDLIST];
 
-    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_WHITELIST-1)
+    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_BONDLIST-1)
            * sizeof(BondInfo_Type));
-    for(unsigned int i = 1; i < SIZEOF_WHITELIST; i++)
+    for(unsigned int i = 1; i < SIZEOF_BONDLIST; i++)
     {
         /* Search for an empty index */
-        if(list[i].INDEX == 0xFF)
+        if(list[i].STATE == 0xFF)
         {
             /* This line checks if the master device was previously bonded.
              * If it was, it will invalidate the previous information */
             if(index != 0xFF && index != 0x00)
             {
                 index = index & 0x7F;
-                list[index].INDEX = 0;
+                list[index].STATE = 0;
                 result = WordWrite(list[index],index);
             }
             return i;
@@ -735,10 +735,10 @@ unsigned int searchAvailableIndex(uint8_t index)
      * that could be removed, so remove and add the new data */
     refreshList(index);
 
-    for(unsigned int i = 1; i < SIZEOF_WHITELIST; i++)
+    for(unsigned int i = 1; i < SIZEOF_BONDLIST; i++)
     {
         /* Search for an empty index */
-        if(list[i].INDEX == 0xFF)
+        if(list[i].STATE == 0xFF)
         {
             return i;
         }
@@ -762,16 +762,16 @@ void refreshList(uint8_t index)
     /* Erase the NVR2 to remove invalid bonding information and rewrite
      * the valid bonding information */
     unsigned int result;
-    BondInfo_Type list[SIZEOF_WHITELIST];
-    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_WHITELIST-1)
+    BondInfo_Type list[SIZEOF_BONDLIST];
+    memcpy(&list[1],(uint8_t *)FLASH_NVR2_BASE, (SIZEOF_BONDLIST-1)
             * sizeof(BondInfo_Type));
     result = Flash_EraseSector(FLASH_NVR2_BASE);
-    list[index].INDEX = 0;
+    list[index].STATE = 0;
 
-    for(int k = 1; k < SIZEOF_WHITELIST; k++)
+    for(int k = 1; k < SIZEOF_BONDLIST; k++)
     {
         /* Rewrite valid indexes*/
-        if(list[k].INDEX != 0)
+        if(list[k].STATE != 0)
         {
             result = WordWrite(list[k],k);
         }

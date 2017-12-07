@@ -92,9 +92,9 @@
 									<listOptionValue builtIn="false" value="syslib"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths.744646400" name="Library search path (-L)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths" useByScannerDiscovery="false" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${eclipse_home}..\libs\debug&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${eclipse_home}..\libs\ble_core\debug&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${eclipse_home}..\libs\ble_profiles\debug&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${eclipse_home}..\lib\release&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${eclipse_home}..\lib\ble_core\release&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${eclipse_home}..\lib\ble_profiles\release&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart.1676744959" name="Do not use standard start files (-nostartfiles)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.verbose.892435145" name="Verbose (-v)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.verbose" useByScannerDiscovery="false" value="true" valueType="boolean"/>
