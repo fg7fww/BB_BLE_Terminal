@@ -6,3 +6,6 @@ Transfered messages are shown at BB LCD display.
 
 Example contains two parts. After archive download and uzip "SH RSL10" part should be placed to the "Samples directory" inside RSL10 IDE, 
 similar "BB NCS36510" to the "Sample_Applications" one inside NCS36510 IoT_IDK. Then they can be imported by eclipse "Impor" -> "Existing Projects into Workspace" IDE option.
+
+2017.12.07
+Update BB_BLE_Terminal for the new RSL10 IDE release 1.3.4
